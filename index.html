@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fun by .py | Raj CS Examination Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js for Marksheet Performance Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Canvas Confetti for Exam Success -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pyBlue: { DEFAULT: '#306998', light: '#4B8BBE', dark: '#1E415E' },
+                        pyYellow: { DEFAULT: '#FFD43B', light: '#FFE873', dark: '#D4AB15' },
+                        darkBg: '#0b0f17',
+                        darkCard: '#131c2a',
+                        darkBorder: '#233148',
+                        codeBg: '#070a10',
+                        rajEmerald: '#10b981'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                        cert: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f17;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0f17; }
+        ::-webkit-scrollbar-thumb { background: #233148; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4B8BBE; }
+
+        .glow-yellow { box-shadow: 0 0 20px rgba(255, 212, 59, 0.25); }
+        .glow-blue { box-shadow: 0 0 20px rgba(75, 139, 190, 0.3); }
+        .glow-text-yellow { text-shadow: 0 0 12px rgba(255, 212, 59, 0.6); }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+        .glass-card {
+            background: rgba(19, 28, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(35, 49, 72, 0.8);
+        }
+
+        /* Syntax colors */
+        .kw { color: #ff7b72; font-weight: 600; }
+        .fn { color: #d2a8ff; }
+        .str { color: #a5d6ff; }
+        .com { color: #8b949e; font-style: italic; }
+        .num { color: #79c0ff; }
+
+        /* Certificate Printable Styling */
+        @media print {
+            body * { visibility: hidden; }
+            #printableCertificateSection, #printableCertificateSection * { visibility: visible; }
+            #printableCertificateSection {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 glass-card px-4 lg:px-8 py-3 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <!-- Logo & Brand -->
+            <div class="flex items-center justify-between w-full md:w-auto">
+                <a href="#" onclick="showSection('notes')" class="flex items-center space-x-3 group">
+                    <div class="relative w-11 h-11 flex items-center justify-center bg-darkBg border border-darkBorder rounded-xl p-1 shadow-inner group-hover:border-pyYellow transition-all duration-300">
+                        <i class="fa-brands fa-python text-3xl text-pyYellow group-hover:rotate-12 transition-transform duration-300"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-extrabold tracking-tight text-white font-mono">
+                            fun by <span class="text-pyYellow glow-text-yellow">.py</span>
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] bg-pyBlue/30 text-pyYellow font-bold px-1.5 py-0.2 rounded border border-pyBlue/50">RAJ CS</span>
+                            <span class="text-[10px] text-gray-400">VBSPU Jaunpur</span>
+                        </div>
+                    </div>
+                </a>
+
+                <button id="mobileNavToggle" class="md:hidden text-gray-300 hover:text-white text-xl">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav id="navMenu" class="hidden md:flex items-center gap-1 bg-darkBg/80 p-1.5 rounded-xl border border-darkBorder text-xs font-semibold w-full md:w-auto justify-center">
+                <button onclick="showSection('notes')" id="nav-notes" class="nav-btn active px-4 py-2 rounded-lg transition-all text-pyYellow bg-pyBlue/20 border border-pyYellow/30">
+                    <i class="fa-solid fa-book-open mr-1.5"></i>Notes & Syllabus
+                </button>
+                <button onclick="showSection('practice')" id="nav-practice" class="nav-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-darkCard transition-all">
+                    <i class="fa-solid fa-list-check mr-1.5"></i>100+ MCQ Bank
+                </button>
+                <button onclick="showSection('exam')" id="nav-exam" class="nav-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-darkCard transition-all">
+                    <i class="fa-solid fa-graduation-cap mr-1.5"></i>Online Exam
+                </button>
+                <button onclick="showSection('playground')" id="nav-playground" class="nav-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-darkCard transition-all">
+                    <i class="fa-solid fa-code mr-1.5"></i>Playground
+                </button>
+            </nav>
+
+            <!-- User Student Profile Indicator -->
+            <div class="hidden lg:flex items-center gap-3">
+                <div id="userBadge" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-darkBg border border-darkBorder text-xs">
+                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
+                    <span id="userBadgeName" class="font-mono text-gray-300">Guest Student</span>
+                    <button onclick="openStudentModal()" class="text-pyYellow hover:underline text-[11px] font-bold ml-1">Edit Account</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6">
+
+        <!-- SECTION 1: NOTES & SYLLABUS -->
+        <section id="section-notes" class="space-y-6">
+            <!-- Hero Banner -->
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden shadow-2xl border-l-4 border-l-pyYellow">
+                <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="px-3 py-1 rounded-full bg-pyYellow/10 border border-pyYellow/30 text-pyYellow text-xs font-mono mb-2 inline-block">
+                            <i class="fa-solid fa-university mr-1"></i> VBSPU BCA Syllabus Aligned
+                        </span>
+                        <h1 class="text-2xl lg:text-3xl font-extrabold text-white">Python Core Concepts & Complete Syllabus</h1>
+                        <p class="text-sm text-gray-400 mt-1">Structured notes covering Basics, OOPs, and Scripting with runnable code samples.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="notesSearch" placeholder="Filter topic (e.g. Tuples, Overriding)..." class="px-3 py-2 bg-darkBg border border-darkBorder rounded-xl text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-pyYellow w-48 md:w-64">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Sidebar Category Selector -->
+                <div class="md:col-span-1 glass-card rounded-2xl p-4 flex flex-col gap-3">
+                    <div class="grid grid-cols-3 md:grid-cols-1 gap-1">
+                        <button onclick="switchNotesCategory('basics')" id="cat-basics" class="notes-cat-btn px-3 py-2 text-left rounded-xl text-xs font-bold bg-pyBlue/20 text-pyYellow border border-pyBlue/40">1. Basics (14)</button>
+                        <button onclick="switchNotesCategory('oops')" id="cat-oops" class="notes-cat-btn px-3 py-2 text-left rounded-xl text-xs font-bold text-gray-400 hover:bg-darkBg">2. OOPs (8)</button>
+                        <button onclick="switchNotesCategory('scripting')" id="cat-scripting" class="notes-cat-btn px-3 py-2 text-left rounded-xl text-xs font-bold text-gray-400 hover:bg-darkBg">3. Scripting (6)</button>
+                    </div>
+                    <div id="notesTopicList" class="space-y-1 overflow-y-auto max-h-[500px] pt-2 border-t border-darkBorder">
+                        <!-- Dynamic List -->
+                    </div>
+                </div>
+
+                <!-- Notes Content View -->
+                <div class="md:col-span-3 glass-card rounded-2xl p-6 flex flex-col gap-6">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-darkBorder pb-3 mb-4">
+                            <div>
+                                <span class="text-xs font-mono text-pyYellow uppercase font-bold" id="noteCategoryLabel">Basics</span>
+                                <h2 class="text-2xl font-bold text-white mt-0.5" id="noteTitle">Loading...</h2>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="prevNote()" class="p-2 bg-darkBg border border-darkBorder rounded-lg text-xs hover:text-pyYellow"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="nextNote()" class="p-2 bg-darkBg border border-darkBorder rounded-lg text-xs hover:text-pyYellow"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+
+                        <div id="noteContent" class="text-sm text-gray-300 leading-relaxed space-y-4">
+                            <!-- Topic text -->
+                        </div>
+                    </div>
+
+                    <!-- Key takeaways -->
+                    <div class="p-4 rounded-xl bg-darkBg/80 border border-darkBorder">
+                        <h4 class="text-xs font-mono font-bold text-pyYellow uppercase mb-2"><i class="fa-solid fa-star mr-1"></i> Key Takeaways</h4>
+                        <ul id="noteTakeaways" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-300"></ul>
+                    </div>
+
+                    <!-- Code block -->
+                    <div class="rounded-xl border border-darkBorder bg-codeBg overflow-hidden">
+                        <div class="flex items-center justify-between px-4 py-2 bg-darkBg border-b border-darkBorder text-xs font-mono text-gray-400">
+                            <span>Python Demo Script</span>
+                            <button onclick="copyNoteCode()" class="text-pyYellow hover:underline"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+                        </div>
+                        <pre id="noteCode" class="p-4 font-mono text-xs overflow-x-auto text-gray-200 leading-relaxed"></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 100+ MCQ PRACTICE BANK -->
+        <section id="section-practice" class="hidden space-y-6">
+            <div class="glass-card rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono mb-2 inline-block">100 Question Practice Repository</span>
+                    <h1 class="text-2xl font-extrabold text-white">Python MCQ Practice Bank</h1>
+                    <p class="text-sm text-gray-400 mt-1">Interactive practice questions from Set 1 and Set 2 with instant answer validation.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <select id="mcqSetFilter" onchange="filterMCQs()" class="px-3 py-2 bg-darkBg border border-darkBorder rounded-xl text-xs text-gray-200">
+                        <option value="all">All Sets (100 Questions)</option>
+                        <option value="set1">Set 1: Basics & OOPs (Q1 - 50)</option>
+                        <option value="set2">Set 2: Functions, Strings & Adv (Q51 - 100)</option>
+                    </select>
+                    <input type="text" id="mcqSearch" onkeyup="filterMCQs()" placeholder="Search question..." class="px-3 py-2 bg-darkBg border border-darkBorder rounded-xl text-xs text-gray-200 w-40 md:w-56">
+                </div>
+            </div>
+
+            <!-- MCQ Cards Container -->
+            <div id="mcqContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamically populated 100 MCQs -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: ONLINE EXAM & MARKSHEET SYSTEM -->
+        <section id="section-exam" class="hidden space-y-6">
+            <!-- Registration / Start Screen -->
+            <div id="examStartCard" class="glass-card rounded-2xl p-8 max-w-2xl mx-auto border-t-4 border-t-pyYellow">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-pyYellow/10 text-pyYellow border border-pyYellow/30 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </div>
+                    <h1 class="text-2xl font-extrabold text-white">RAJ CS Examination Portal</h1>
+                    <p class="text-sm text-gray-400 mt-1">Official Python Certification Test • VBSPU Syllabus Pattern</p>
+                </div>
+
+                <form id="studentExamForm" onsubmit="startExam(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">Student Full Name *</label>
+                            <input type="text" id="examStudentName" required placeholder="e.g. Raj Gautam" class="w-full px-3.5 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-xs text-white focus:border-pyYellow focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">Roll No / Student ID *</label>
+                            <input type="text" id="examRollNo" required placeholder="e.g. BCA2024-089" class="w-full px-3.5 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-xs text-white focus:border-pyYellow focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">Course *</label>
+                            <select id="examCourse" class="w-full px-3.5 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-xs text-white focus:border-pyYellow">
+                                <option value="BCA - Computer Applications">BCA (Bachelor of Computer Applications)</option>
+                                <option value="MCA - Computer Applications">MCA</option>
+                                <option value="Diploma in Python & AI">Diploma in Python</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">College / Institute *</label>
+                            <input type="text" id="examCollege" value="VBSPU Jaunpur / Raj CS" class="w-full px-3.5 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-xs text-white focus:border-pyYellow focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Select Exam Mode</label>
+                        <select id="examLength" class="w-full px-3.5 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-xs text-white focus:border-pyYellow">
+                            <option value="25">Quick Assessment (25 Questions - 25 Mins)</option>
+                            <option value="50">Full Certification Exam (50 Questions - 45 Mins)</option>
+                        </select>
+                    </div>
+
+                    <div class="p-4 bg-darkBg/60 rounded-xl border border-darkBorder text-xs text-gray-400 space-y-1">
+                        <p class="font-bold text-pyYellow"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Exam Rules:</p>
+                        <p>• Correct answer: +4 Marks | Incorrect answer: -1 Mark.</p>
+                        <p>• Official Grade & Printable Certificate will be generated upon completion.</p>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-pyYellow hover:bg-pyYellow-light text-darkBg font-extrabold text-sm rounded-xl transition-all shadow-lg glow-yellow">
+                        <i class="fa-solid fa-play mr-2"></i>Start Online Examination
+                    </button>
+                </form>
+            </div>
+
+            <!-- LIVE EXAM INTERFACE (Hidden initially) -->
+            <div id="liveExamArea" class="hidden space-y-6">
+                <!-- Exam Top Bar -->
+                <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-b-2 border-b-pyYellow">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-pyBlue/20 text-pyYellow border border-pyBlue/40 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-gray-400 font-mono">TIME REMAINING</p>
+                            <p id="examTimer" class="text-xl font-mono font-bold text-pyYellow">25:00</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center sm:text-right">
+                        <p class="text-xs font-bold text-white" id="examStudentLabel">Raj Gautam</p>
+                        <p class="text-[11px] text-gray-400 font-mono" id="examProgressLabel">Question 1 of 25</p>
+                    </div>
+
+                    <button onclick="submitExamEarly()" class="px-4 py-2 bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30 font-bold text-xs rounded-xl">
+                        Submit Test
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <!-- Question Area -->
+                    <div class="lg:col-span-3 glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[380px]">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono font-bold text-pyYellow" id="qNumberBadge">Question #1</span>
+                                <button onclick="toggleFlagQuestion()" id="flagBtn" class="text-xs text-gray-400 hover:text-pyYellow">
+                                    <i class="fa-regular fa-flag mr-1"></i>Flag for Review
+                                </button>
+                            </div>
+                            <h3 id="qText" class="text-lg font-bold text-white mb-6">Loading Question...</h3>
+
+                            <div id="qOptions" class="space-y-3">
+                                <!-- Options dynamically rendered -->
+                            </div>
+                        </div>
+
+                        <!-- Question Nav Buttons -->
+                        <div class="flex items-center justify-between pt-6 mt-6 border-t border-darkBorder">
+                            <button onclick="navigateExamQuestion(-1)" class="px-4 py-2 rounded-xl bg-darkBg border border-darkBorder text-xs text-gray-300 hover:text-white">
+                                <i class="fa-solid fa-chevron-left mr-1"></i> Previous
+                            </button>
+                            <button onclick="navigateExamQuestion(1)" class="px-5 py-2 rounded-xl bg-pyYellow text-darkBg font-bold text-xs hover:bg-pyYellow-light">
+                                Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Grid Palette -->
+                    <div class="lg:col-span-1 glass-card rounded-2xl p-4">
+                        <h4 class="text-xs font-mono font-bold text-gray-400 uppercase mb-3">Question Palette</h4>
+                        <div id="qPalette" class="grid grid-cols-5 gap-2">
+                            <!-- Palette buttons -->
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-darkBorder text-[11px] space-y-1.5 text-gray-400">
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-pyYellow inline-block"></span> Current</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span> Answered</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-amber-500 inline-block"></span> Flagged</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-darkBg border border-darkBorder inline-block"></span> Unanswered</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OFFICIAL MARKSHEET & CERTIFICATE DISPLAY AREA -->
+            <div id="certificateResultArea" class="hidden space-y-6">
+                <!-- Printable Certificate Card -->
+                <div id="printableCertificateSection" class="bg-white text-gray-900 rounded-3xl p-8 lg:p-12 shadow-2xl border-8 border-double border-yellow-600 max-w-4xl mx-auto relative overflow-hidden font-sans">
+                    
+                    <!-- Decorative Background Watermark -->
+                    <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+                        <i class="fa-brands fa-python text-[300px] text-gray-900"></i>
+                    </div>
+
+                    <!-- Certificate Header -->
+                    <div class="text-center border-b-2 border-yellow-600 pb-6 mb-6">
+                        <div class="flex items-center justify-center gap-3 mb-2">
+                            <i class="fa-brands fa-python text-4xl text-yellow-600"></i>
+                            <h2 class="text-3xl lg:text-4xl font-extrabold tracking-wide uppercase font-cert text-gray-900">RAJ CS</h2>
+                        </div>
+                        <p class="text-sm font-bold text-gray-700 uppercase tracking-widest">Institute of Computer Science & Educational Testing</p>
+                        <p class="text-xs text-gray-500">Affiliated with BCA Syllabus Standards • VBSPU Jaunpur Portal</p>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="text-center mb-6">
+                        <span class="inline-block px-4 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full uppercase tracking-widest border border-yellow-300">Official Statement of Marks & Certificate</span>
+                        <h3 class="text-xl font-bold text-gray-800 mt-3 font-serif">This is to certify that</h3>
+                        <h4 id="certStudentName" class="text-2xl lg:text-3xl font-extrabold text-blue-900 my-1 underline decoration-yellow-500 underline-offset-4">RAJ GAUTAM</h4>
+                        <p class="text-xs text-gray-600">Roll No: <strong id="certRollNo" class="text-gray-900">BCA2024-001</strong> | Course: <strong id="certCourse" class="text-gray-900">BCA Python</strong></p>
+                    </div>
+
+                    <!-- Marks Breakdown Table -->
+                    <div class="my-6">
+                        <table class="w-full text-xs text-left border-collapse border border-gray-300">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-800 uppercase text-[11px]">
+                                    <th class="border border-gray-300 p-2.5">Evaluation Parameter</th>
+                                    <th class="border border-gray-300 p-2.5 text-center">Score / Metric</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-300 p-2.5 font-semibold">Total Questions Evaluated</td>
+                                    <td class="border border-gray-300 p-2.5 text-center font-bold" id="certTotalQ">25</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-2.5 font-semibold text-green-700">Correct Answers (+4 Marks)</td>
+                                    <td class="border border-gray-300 p-2.5 text-center font-bold text-green-700" id="certCorrect">22</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-2.5 font-semibold text-red-600">Incorrect Answers (-1 Mark)</td>
+                                    <td class="border border-gray-300 p-2.5 text-center font-bold text-red-600" id="certIncorrect">3</td>
+                                </tr>
+                                <tr class="bg-yellow-50">
+                                    <td class="border border-gray-300 p-2.5 font-extrabold text-gray-900">Final Score Percentage</td>
+                                    <td class="border border-gray-300 p-2.5 text-center font-extrabold text-blue-900 text-sm" id="certScorePct">88%</td>
+                                </tr>
+                                <tr class="bg-blue-50">
+                                    <td class="border border-gray-300 p-2.5 font-extrabold text-gray-900">Awarded Qualification Grade</td>
+                                    <td class="border border-gray-300 p-2.5 text-center font-extrabold text-green-700 text-sm" id="certGrade">GRADE A+ (OUTSTANDING)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Signatures & Stamp -->
+                    <div class="flex items-center justify-between pt-8 mt-8 border-t border-gray-300">
+                        <div class="text-center">
+                            <div class="w-16 h-16 border-2 border-yellow-600 rounded-full flex items-center justify-center mx-auto mb-1 text-yellow-700 text-xs font-bold uppercase">
+                                RAJ CS<br>SEAL
+                            </div>
+                            <p class="text-[10px] text-gray-500 font-mono">VERIFIED PORTAL</p>
+                        </div>
+
+                        <div class="text-center">
+                            <p class="text-xs font-bold text-gray-800" id="certIssueDate">Date: Oct 21, 2026</p>
+                            <p class="text-[10px] text-gray-500">Jaunpur, Uttar Pradesh</p>
+                        </div>
+
+                        <div class="text-center">
+                            <span class="font-serif italic font-bold text-blue-900 text-lg block border-b border-gray-400 px-4">Raj Gautam</span>
+                            <p class="text-xs font-bold text-gray-800 mt-0.5">Raj Gautam</p>
+                            <p class="text-[10px] text-gray-500">Founder, Raj CS • VBSPU Jaunpur</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Controls for Marksheet -->
+                <div class="flex flex-wrap items-center justify-center gap-4 no-print">
+                    <button onclick="window.print()" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl transition-all shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-print text-sm"></i> Download / Print Marksheet PDF
+                    </button>
+                    <button onclick="showSection('exam')" class="px-6 py-3 bg-pyBlue hover:bg-pyBlue-dark text-white font-extrabold text-xs rounded-xl transition-all shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right text-sm"></i> Retake Test
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: INTERACTIVE CODE PLAYGROUND -->
+        <section id="section-playground" class="hidden space-y-6">
+            <div class="glass-card rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <span class="px-3 py-1 rounded-full bg-pyBlue/20 text-pyYellow text-xs font-mono mb-2 inline-block">Interactive Shell & Editor</span>
+                    <h1 class="text-2xl font-extrabold text-white">Python Playground</h1>
+                    <p class="text-sm text-gray-400 mt-1">Simulate code execution right inside your browser.</p>
+                </div>
+                <button onclick="runPlaygroundCode()" class="px-5 py-2.5 bg-pyYellow hover:bg-pyYellow-light text-darkBg font-extrabold text-xs rounded-xl shadow-lg flex items-center gap-2 glow-yellow">
+                    <i class="fa-solid fa-play"></i> Run Code
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Editor -->
+                <div class="glass-card rounded-2xl p-4 flex flex-col gap-3">
+                    <div class="flex items-center justify-between text-xs font-mono text-gray-400">
+                        <span>main.py</span>
+                        <select id="sampleSelect" onchange="loadSampleCode()" class="bg-darkBg border border-darkBorder text-gray-300 rounded px-2 py-1">
+                            <option value="hello">Sample: Student Record</option>
+                            <option value="oops">Sample: OOP Inheritance</option>
+                            <option value="script">Sample: Regex Match</option>
+                        </select>
+                    </div>
+                    <textarea id="playgroundCode" rows="14" class="w-full bg-codeBg p-4 font-mono text-xs text-green-400 rounded-xl border border-darkBorder focus:outline-none focus:border-pyYellow leading-relaxed" spellcheck="false"></textarea>
+                </div>
+
+                <!-- Output Console -->
+                <div class="glass-card rounded-2xl p-4 flex flex-col gap-3">
+                    <div class="flex items-center justify-between text-xs font-mono text-gray-400">
+                        <span>Console Output</span>
+                        <button onclick="document.getElementById('playgroundConsole').textContent = ''" class="hover:text-white">Clear</button>
+                    </div>
+                    <div id="playgroundConsole" class="w-full h-[320px] bg-black/90 p-4 font-mono text-xs text-green-400 rounded-xl border border-darkBorder overflow-y-auto whitespace-pre-wrap">
+Ready to run Python code...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto border-t border-darkBorder bg-darkCard/80 py-6 px-4 text-center">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+            <div class="flex items-center gap-2">
+                <i class="fa-brands fa-python text-pyYellow text-lg"></i>
+                <span class="text-white font-bold">fun by .py</span>
+                <span>— Developed by <strong>Raj Gautam</strong></span>
+            </div>
+            <div>
+                <p>Institute Branding: <strong class="text-pyYellow">Raj CS</strong> | VBSPU Jaunpur (BCA)</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- STUDENT ACCOUNT MODAL -->
+    <div id="studentModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full border border-darkBorder">
+            <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-user-gear text-pyYellow mr-2"></i>Student Profile Settings</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-gray-400 font-mono">Your Full Name</label>
+                    <input type="text" id="modalName" value="Raj Gautam" class="w-full px-3 py-2 bg-darkBg border border-darkBorder rounded-xl text-xs text-white mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 font-mono">Roll No</label>
+                    <input type="text" id="modalRoll" value="BCA2024-001" class="w-full px-3 py-2 bg-darkBg border border-darkBorder rounded-xl text-xs text-white mt-1">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-2">
+                <button onclick="closeStudentModal()" class="px-4 py-2 bg-darkBg text-xs text-gray-300 rounded-xl">Cancel</button>
+                <button onclick="saveStudentProfile()" class="px-4 py-2 bg-pyYellow text-darkBg font-bold text-xs rounded-xl">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT ENGINE & MCQ DATA DATABASE -->
+    <script>
+        // GLOBAL STATE
+        let studentProfile = { name: "Raj Gautam", roll: "BCA2024-001", course: "BCA - Computer Applications" };
+        let activeSection = 'notes';
+
+        // 100 MCQs COMPLETE DATABASE (Included from prompt)
+        const RAW_MCQS = [
+            { q: "Which of the following is the correct way to create a variable in Python?", opts: ["int x = 10;", "x = 10", "var x = 10;", "x := int(10)"], ans: 1, set: "set1" },
+            { q: "What is the correct file extension for Python files?", opts: [".pyth", ".pt", ".py", ".p"], ans: 2, set: "set1" },
+            { q: "Which data type is immutable in Python?", opts: ["List", "Dictionary", "Set", "Tuple"], ans: 3, set: "set1" },
+            { q: "What will be the output of print(type(5 / 2)) in Python 3?", opts: ["<class 'int'>", "<class 'float'>", "<class 'double'>", "<class 'decimal'>"], ans: 1, set: "set1" },
+            { q: "How do you write a single-line comment in Python?", opts: ["/* comment */", "// comment", "# comment", "<!-- comment -->"], ans: 2, set: "set1" },
+            { q: "Which keyword is used to define a function in Python?", opts: ["function", "def", "define", "fun"], ans: 1, set: "set1" },
+            { q: "What is the output of print(10 // 3)?", opts: ["3.33", "3", "4", "1"], ans: 1, set: "set1" },
+            { q: "Which of the following is NOT a valid Python data type?", opts: ["list", "tuple", "array", "dict"], ans: 2, set: "set1" },
+            { q: "How do you create a dictionary in Python?", opts: ["d = []", "d = ()", "d = {}", "d = <>"], ans: 2, set: "set1" },
+            { q: "What will print('Python'[1:4]) output?", opts: ["Pyt", "yth", "ytho", "thon"], ans: 1, set: "set1" },
+            { q: "Which operator is used for exponentiation (power) in Python?", opts: ["^", "**", "//", "*"], ans: 1, set: "set1" },
+            { q: "What is the output of print(3 * 'abc')?", opts: ["abcabcabc", "Error", "3abc", "abc3"], ans: 0, set: "set1" },
+            { q: "Which method is used to add an element at the end of a list?", opts: ["add()", "insert()", "append()", "push()"], ans: 2, set: "set1" },
+            { q: "What is the correct syntax to import a module named math?", opts: ["include math", "import math", "using math", "require math"], ans: 1, set: "set1" },
+            { q: "Which of the following is used to handle exceptions in Python?", opts: ["try-catch", "try-except", "do-catch", "handle-error"], ans: 1, set: "set1" },
+            { q: "What is the output of print(bool(0))?", opts: ["True", "False", "0", "Error"], ans: 1, set: "set1" },
+            { q: "In Python OOPs, which method is used as a constructor?", opts: ["__init__", "__main__", "__construct__", "__new__"], ans: 0, set: "set1" },
+            { q: "What does the self keyword represent in a class?", opts: ["The class itself", "The parent class", "The current instance of the class", "A global variable"], ans: 2, set: "set1" },
+            { q: "Which OOP concept allows a child class to inherit properties from a parent class?", opts: ["Encapsulation", "Polymorphism", "Inheritance", "Abstraction"], ans: 2, set: "set1" },
+            { q: "How do you create an object of class Student?", opts: ["Student obj = new Student()", "obj = Student()", "obj = new Student", "Student() -> obj"], ans: 1, set: "set1" },
+            { q: "What is Data Hiding in Python?", opts: ["Deleting data", "Making variables private using __", "Hiding source code", "Encrypting data"], ans: 1, set: "set1" },
+            { q: "What will be the output of print(2 ** 3)?", opts: ["6", "8", "9", "5"], ans: 1, set: "set1" },
+            { q: "Which function is used to get user input in Python?", opts: ["scan()", "get()", "input()", "read()"], ans: 2, set: "set1" },
+            { q: "What is the output of len('VBSPU')?", opts: ["4", "5", "6", "Error"], ans: 1, set: "set1" },
+            { q: "Which loop is used to iterate over a sequence?", opts: ["while", "do-while", "for", "repeat"], ans: 2, set: "set1" },
+            { q: "What will print('Hello' + 'World') output?", opts: ["Hello World", "HelloWorld", "Hello+World", "Error"], ans: 1, set: "set1" },
+            { q: "Which of the following is a valid way to open a file for writing?", opts: ["open('file.txt', 'r')", "open('file.txt', 'w')", "open('file.txt', 'a')", "open('file.txt', 'x')"], ans: 1, set: "set1" },
+            { q: "What is the output of print(list(range(3)))?", opts: ["[1, 2, 3]", "[0, 1, 2]", "[0, 1, 2, 3]", "[3]"], ans: 1, set: "set1" },
+            { q: "Which keyword is used to exit a loop prematurely?", opts: ["exit", "stop", "break", "continue"], ans: 2, set: "set1" },
+            { q: "What is the result of print(5 == 5.0)?", opts: ["True", "False", "Error", "None"], ans: 0, set: "set1" },
+            { q: "Which of the following is used for Machine Learning Regression in Python?", opts: ["scikit-learn", "numpy", "pandas", "matplotlib"], ans: 0, set: "set1" },
+            { q: "What does *args allow a function to do?", opts: ["Multiple keyword args", "Multiple positional args", "Only one arg", "Return multiple values"], ans: 1, set: "set1" },
+            { q: "What is the output of print(str(123) + '456')?", opts: ["579", "123456", "Error", "'123456'"], ans: 1, set: "set1" },
+            { q: "How do you remove the last element from a list?", opts: ["remove()", "pop()", "delete()", "clear()"], ans: 1, set: "set1" },
+            { q: "What is the correct way to check if a key 'name' exists in dictionary d?", opts: ["if 'name' in d:", "if d.has('name'):", "if exists(d, 'name'):", "if d.find('name'):"], ans: 0, set: "set1" },
+            { q: "Which of the following is a mutable data type?", opts: ["String", "Tuple", "List", "Integer"], ans: 2, set: "set1" },
+            { q: "What is the output of print(10 > 5 and 5 > 8)?", opts: ["True", "False", "Error", "None"], ans: 1, set: "set1" },
+            { q: "Which module is used to pass command line arguments in Python?", opts: ["os", "sys", "cmd", "argparse"], ans: 1, set: "set1" },
+            { q: "In exception handling, which block always executes regardless of an error?", opts: ["try", "except", "else", "finally"], ans: 3, set: "set1" },
+            { q: "What is the output of print('PYTHON'.lower())?", opts: ["PYTHON", "python", "Python", "pYTHON"], ans: 1, set: "set1" },
+            { q: "Which method is used to override a method in a child class?", opts: ["By using the same method name as the parent class", "By using @override", "By using override keyword", "Not possible"], ans: 0, set: "set1" },
+            { q: "What is the output of print(3 != 3)?", opts: ["True", "False", "Error", "None"], ans: 1, set: "set1" },
+            { q: "Which of the following is NOT a keyword in Python?", opts: ["class", "def", "import", "main"], ans: 3, set: "set1" },
+            { q: "How do you find the length of a dictionary d?", opts: ["d.length()", "len(d)", "size(d)", "d.count()"], ans: 1, set: "set1" },
+            { q: "What is the output of print(2 + 3 * 4)?", opts: ["20", "14", "24", "10"], ans: 1, set: "set1" },
+            { q: "Which operator is used for floor division?", opts: ["/", "//", "%", "**"], ans: 1, set: "set1" },
+            { q: "What will print(type('Hello')) output?", opts: ["<class 'string'>", "<class 'str'>", "<class 'char'>", "<class 'text'>"], ans: 1, set: "set1" },
+            { q: "Which of the following is the correct way to define a private variable x in a class?", opts: ["_x", "__x", "x_", "private x"], ans: 1, set: "set1" },
+            { q: "What is the output of print(bool('False'))?", opts: ["False", "True", "Error", "None"], ans: 1, set: "set1" },
+            { q: "Which function is used to get the current working directory in Python?", opts: ["os.getcwd()", "sys.getpath()", "os.path()", "dir.current()"], ans: 0, set: "set1" },
+            
+            // SET 2 (51-100)
+            { q: "What will be the output of print('Python'.find('t'))?", opts: ["2", "3", "1", "-1"], ans: 0, set: "set2" },
+            { q: "Which method is used to remove whitespace from both ends of a string?", opts: ["strip()", "trim()", "cut()", "remove()"], ans: 0, set: "set2" },
+            { q: "What is the output of print([1, 2, 3] * 2)?", opts: ["[1, 2, 3, 1, 2, 3]", "[2, 4, 6]", "Error", "[1, 2, 3, 2]"], ans: 0, set: "set2" },
+            { q: "Which of the following is used to concatenate two lists in Python?", opts: ["+ operator", "append() method", "merge() function", "join() method"], ans: 0, set: "set2" },
+            { q: "What will print(5 % 2) output?", opts: ["2.5", "2", "1", "0"], ans: 2, set: "set2" },
+            { q: "Which statement is used to skip the current iteration of a loop?", opts: ["break", "pass", "continue", "skip"], ans: 2, set: "set2" },
+            { q: "What is the output of print(type([]))?", opts: ["<class 'tuple'>", "<class 'list'>", "<class 'array'>", "<class 'dict'>"], ans: 1, set: "set2" },
+            { q: "How do you define a lambda function in Python?", opts: ["lambda x: x + 1", "def lambda(x): return x + 1", "lambda(x) { return x + 1 }", "function lambda(x) => x + 1"], ans: 0, set: "set2" },
+            { q: "What will be the output of print(3 if 5 > 2 else 4)?", opts: ["5", "2", "3", "4"], ans: 2, set: "set2" },
+            { q: "Which of the following is used to iterate over two lists simultaneously?", opts: ["zip()", "map()", "filter()", "range()"], ans: 0, set: "set2" },
+            { q: "What is the output of print(len({'a': 1, 'b': 2}))?", opts: ["1", "2", "4", "Error"], ans: 1, set: "set2" },
+            { q: "In Python, which operator checks if two variables point to the same object in memory?", opts: ["==", "is", "equals()", "==="], ans: 1, set: "set2" },
+            { q: "What will print('hello'.capitalize()) output?", opts: ["HELLO", "Hello", "hello", "hELLO"], ans: 1, set: "set2" },
+            { q: "Which of the following is a correct syntax for a while loop?", opts: ["while (x < 5):", "while x < 5:", "while (x < 5) { }", "Both A and B"], ans: 3, set: "set2" },
+            { q: "What is the output of print(abs(-5))?", opts: ["-5", "5", "0", "Error"], ans: 1, set: "set2" },
+            { q: "Which data type stores multiple unique items in an unordered collection?", opts: ["List", "Tuple", "Set", "Dictionary"], ans: 2, set: "set2" },
+            { q: "What will print(list('abc')) output?", opts: ["['abc']", "['a', 'b', 'c']", "['a', 'bc']", "Error"], ans: 1, set: "set2" },
+            { q: "Which function converts a string to an integer?", opts: ["int()", "str()", "float()", "num()"], ans: 0, set: "set2" },
+            { q: "What is the output of print(max([10, 20, 5]))?", opts: ["10", "20", "5", "35"], ans: 1, set: "set2" },
+            { q: "What is the purpose of the pass statement in Python?", opts: ["Exit program", "Skip loop", "Do nothing (placeholder)", "Pass a variable"], ans: 2, set: "set2" },
+            { q: "What will print(1 == True) output?", opts: ["True", "False", "Error", "None"], ans: 0, set: "set2" },
+            { q: "Which method is used to sort a list in descending order?", opts: ["list.sort(reverse=True)", "list.desc()", "list.sort(desc=True)", "list.reverse_sort()"], ans: 0, set: "set2" },
+            { q: "What is the output of print(''.join(['A', 'B', 'C']))?", opts: ["A B C", "ABC", "A,B,C", "Error"], ans: 1, set: "set2" },
+            { q: "How do you check the data type of a variable x?", opts: ["type(x)", "typeof(x)", "check(x)", "datatype(x)"], ans: 0, set: "set2" },
+            { q: "What will print(10 // 3.0) output?", opts: ["3.0", "3", "3.33", "Error"], ans: 0, set: "set2" },
+            { q: "Which of the following is used to handle multiple exceptions in a single block?", opts: ["except (ValueError, TypeError):", "except ValueError, TypeError:", "except ValueError or TypeError:", "except [ValueError, TypeError]:"], ans: 0, set: "set2" },
+            { q: "What is the output of print(2 ** 0)?", opts: ["0", "1", "2", "Error"], ans: 1, set: "set2" },
+            { q: "Which keyword is used to create a class in Python?", opts: ["object", "def", "class", "struct"], ans: 2, set: "set2" },
+            { q: "What will print([1, 2] + [3, 4]) output?", opts: ["[4, 6]", "[1, 2, 3, 4]", "[[1, 2], [3, 4]]", "Error"], ans: 1, set: "set2" },
+            { q: "Which function is used to generate a sequence of numbers in a loop?", opts: ["seq()", "range()", "list()", "loop()"], ans: 1, set: "set2" },
+            { q: "What is the output of print('Hello'[0])?", opts: ["H", "e", "Hello", "Error"], ans: 0, set: "set2" },
+            { q: "In Python, how do you create an empty set?", opts: ["s = {}", "s = set()", "s = []", "s = ()"], ans: 1, set: "set2" },
+            { q: "What is the output of print(5 in [1, 2, 5, 7])?", opts: ["True", "False", "5", "Error"], ans: 0, set: "set2" },
+            { q: "Which of the following is NOT a valid Python variable name?", opts: ["my_var", "_var", "2var", "var2"], ans: 2, set: "set2" },
+            { q: "What will print(str(10.5)) output?", opts: ["10.5", "'10.5'", "Error", "10"], ans: 0, set: "set2" },
+            { q: "What is the purpose of the __init__ method?", opts: ["Initialize class variables", "Destroy object", "Import modules", "Print object details"], ans: 0, set: "set2" },
+            { q: "What will print(8 / 2) output?", opts: ["4", "4.0", "4.00", "Error"], ans: 1, set: "set2" },
+            { q: "Which module is used to work with regular expressions in Python?", opts: ["regex", "re", "pyre", "regexp"], ans: 1, set: "set2" },
+            { q: "What is the output of print(None == 0)?", opts: ["True", "False", "Error", "None"], ans: 1, set: "set2" },
+            { q: "How do you add a comment on multiple lines in Python?", opts: ["// at start", "/* ... */", "# at start of each line", "<!-- ... -->"], ans: 2, set: "set2" },
+            { q: "What will print(len([1, [2, 3], 4])) output?", opts: ["4", "3", "2", "Error"], ans: 1, set: "set2" },
+            { q: "Which method is used to find the index of an element in a list?", opts: ["find()", "index()", "search()", "locate()"], ans: 1, set: "set2" },
+            { q: "What will be the output of print(any([False, True, False]))?", opts: ["True", "False", "Error", "None"], ans: 0, set: "set2" },
+            { q: "What is the output of print(all([True, True, False]))?", opts: ["True", "False", "Error", "None"], ans: 1, set: "set2" },
+            { q: "Which of the following is used to copy a list?", opts: ["list2 = list1", "list2 = list1.copy()", "list2 = list1[:]", "Both B and C"], ans: 3, set: "set2" },
+            { q: "What is the output of print('Python'.replace('P', 'J'))?", opts: ["Jython", "Python", "JythonP", "Error"], ans: 0, set: "set2" },
+            { q: "What is the result of print(10 is 10)?", opts: ["True", "False", "Error", "None"], ans: 0, set: "set2" },
+            { q: "Which function gets the ASCII value of a character in Python?", opts: ["ascii()", "chr()", "ord()", "code()"], ans: 2, set: "set2" },
+            { q: "What will print(2 * 3 ** 2) output?", opts: ["36", "18", "12", "81"], ans: 1, set: "set2" },
+            { q: "Which of the following is used to install external Python packages?", opts: ["pip", "install", "pkg", "setup"], ans: 0, set: "set2" }
+        ];
+
+        // NOTES DATA STRUCTURE
+        const NOTES_DATA = {
+            basics: [
+                { title: "1. Python Setup", text: "Python installation requires downloading Python 3.x from python.org. Ensure PATH environment variable is set during installation.", takeaways: ["Download official Python 3.x", "Check 'Add Python to PATH'"], code: "import sys\nprint('Python Version:', sys.version)" },
+                { title: "2. Tuples", text: "Tuples are immutable ordered collections written with parentheses (). Fast and memory efficient.", takeaways: ["Immutable structure", "Syntax: (1, 2, 3)"], code: "coords = (25.31, 82.97)\nprint('Lat:', coords[0])" },
+                { title: "3. Tokens", text: "Smallest individual units in code: Keywords, Identifiers, Literals, Operators, and Punctuators.", takeaways: ["35+ reserved keywords", "Case sensitive names"], code: "x = 10  # Identifier = Literal" },
+                { title: "4. Dictionaries", text: "Key-Value mappings written in curly braces {key: value}. Optimized for fast lookups.", takeaways: ["Keys must be unique", "Mutable structures"], code: "d = {'name': 'Raj', 'course': 'BCA'}\nprint(d.get('name'))" },
+                { title: "5. Functions", text: "Modular reusable code blocks declared with the 'def' keyword.", takeaways: ["Keyword 'def'", "Returns values"], code: "def add(a, b):\n    return a + b\nprint(add(5, 10))" }
+            ],
+            oops: [
+                { title: "1. Classes & Objects", text: "Classes are user-defined blueprints. Objects are dynamic instantiations of classes.", takeaways: ["__init__() constructor", "Instantiation"], code: "class Student:\n    def __init__(self, name):\n        self.name = name\ns1 = Student('Raj')\nprint(s1.name)" },
+                { title: "2. Inheritance", text: "Reusing features of base classes in child classes using class Child(Parent).", takeaways: ["Single & Multiple inheritance", "super() method"], code: "class Animal:\n    def speak(self):\n        return 'Sound'\nclass Dog(Animal):\n    pass\nd = Dog()\nprint(d.speak())" },
+                { title: "3. Data Hiding", text: "Private variables are prefixed with double underscores __var to trigger name mangling.", takeaways: ["Private attribute __", "Encapsulation pattern"], code: "class Bank:\n    def __init__(self):\n        self.__balance = 1000\nb = Bank()\n# b.__balance throws error" }
+            ],
+            scripting: [
+                { title: "1. Regular Expressions", text: "Pattern matching module 're' used for string searching, validation, and extraction.", takeaways: ["import re", "re.findall()"], code: "import re\ntext = 'Email raj@vbspu.ac.in'\nprint(re.findall(r'\\S+@\\S+', text))" },
+                { title: "2. File Handling", text: "Reading and writing files safely using context managers with open('file', 'r') as f.", takeaways: ["Context manager 'with'", "Modes: 'r', 'w', 'a'"], code: "with open('demo.txt', 'w') as f:\n    f.write('Hello Raj CS')" }
+            ]
+        };
+
+        // EXAM LOGIC ENGINE STATE
+        let examQuestions = [];
+        let currentExamIndex = 0;
+        let userAnswers = {};
+        let flaggedQuestions = {};
+        let examTimerInterval = null;
+        let examTimeRemaining = 0;
+
+        // INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPracticeMCQs();
+            switchNotesCategory('basics');
+            setupPlayground();
+            
+            // Mobile Nav Toggle
+            document.getElementById('mobileNavToggle').addEventListener('click', () => {
+                const nav = document.getElementById('navMenu');
+                nav.classList.toggle('hidden');
+                nav.classList.toggle('flex');
+            });
+        });
+
+        // SECTION SWITCHER
+        function showSection(sectionId) {
+            activeSection = sectionId;
+            ['notes', 'practice', 'exam', 'playground'].forEach(s => {
+                document.getElementById(`section-${s}`).classList.add('hidden');
+                document.getElementById(`nav-${s}`).className = "nav-btn px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-darkCard transition-all";
+            });
+
+            document.getElementById(`section-${sectionId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${sectionId}`);
+            activeBtn.className = "nav-btn active px-4 py-2 rounded-lg transition-all text-pyYellow bg-pyBlue/20 border border-pyYellow/30";
+        }
+
+        // NOTES SYSTEM
+        let currentNotesCat = 'basics';
+        let currentNoteIdx = 0;
+
+        function switchNotesCategory(cat) {
+            currentNotesCat = cat;
+            currentNoteIdx = 0;
+            
+            document.querySelectorAll('.notes-cat-btn').forEach(b => {
+                b.className = "notes-cat-btn px-3 py-2 text-left rounded-xl text-xs font-bold text-gray-400 hover:bg-darkBg";
+            });
+            document.getElementById(`cat-${cat}`).className = "notes-cat-btn px-3 py-2 text-left rounded-xl text-xs font-bold bg-pyBlue/20 text-pyYellow border border-pyBlue/40";
+
+            renderNotesList();
+            displayNoteContent();
+        }
+
+        function renderNotesList() {
+            const list = document.getElementById('notesTopicList');
+            list.innerHTML = '';
+            NOTES_DATA[currentNotesCat].forEach((item, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${idx === currentNoteIdx ? 'bg-pyYellow/10 text-pyYellow font-bold' : 'text-gray-400 hover:text-white'}`;
+                btn.textContent = item.title;
+                btn.onclick = () => { currentNoteIdx = idx; renderNotesList(); displayNoteContent(); };
+                list.appendChild(btn);
+            });
+        }
+
+        function displayNoteContent() {
+            const topic = NOTES_DATA[currentNotesCat][currentNoteIdx];
+            document.getElementById('noteCategoryLabel').textContent = currentNotesCat.toUpperCase();
+            document.getElementById('noteTitle').textContent = topic.title;
+            document.getElementById('noteContent').textContent = topic.text;
+            
+            const tak = document.getElementById('noteTakeaways');
+            tak.innerHTML = topic.takeaways.map(t => `<li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-pyYellow"></i><span>${t}</span></li>`).join('');
+
+            document.getElementById('noteCode').textContent = topic.code;
+        }
+
+        function prevNote() {
+            if (currentNoteIdx > 0) { currentNoteIdx--; renderNotesList(); displayNoteContent(); }
+        }
+        function nextNote() {
+            if (currentNoteIdx < NOTES_DATA[currentNotesCat].length - 1) { currentNoteIdx++; renderNotesList(); displayNoteContent(); }
+        }
+
+        // PRACTICE MCQS SYSTEM
+        function renderPracticeMCQs() {
+            const container = document.getElementById('mcqContainer');
+            container.innerHTML = '';
+
+            const filterSet = document.getElementById('mcqSetFilter')?.value || 'all';
+            const search = document.getElementById('mcqSearch')?.value.toLowerCase() || '';
+
+            RAW_MCQS.forEach((mcq, idx) => {
+                if (filterSet !== 'all' && mcq.set !== filterSet) return;
+                if (search && !mcq.q.toLowerCase().includes(search)) return;
+
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl p-5 border border-darkBorder flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between text-[11px] font-mono text-pyYellow mb-2">
+                            <span>Q${idx + 1} • ${mcq.set.toUpperCase()}</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-white mb-3">${mcq.q}</h4>
+                        <div class="space-y-1.5">
+                            ${mcq.opts.map((opt, oIdx) => `
+                                <button onclick="checkPracticeAns(${idx}, ${oIdx}, this)" class="w-full text-left p-2.5 rounded-xl bg-darkBg border border-darkBorder text-xs text-gray-300 hover:border-pyYellow transition-all">
+                                    ${String.fromCharCode(65 + oIdx)}. ${opt}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div id="pracFeed-${idx}" class="mt-3 text-xs font-bold hidden p-2 rounded-lg"></div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkPracticeAns(qIdx, optIdx, btn) {
+            const mcq = RAW_MCQS[qIdx];
+            const feed = document.getElementById(`pracFeed-${qIdx}`);
+            feed.classList.remove('hidden');
+
+            if (optIdx === mcq.ans) {
+                feed.className = "mt-3 text-xs font-bold p-2 rounded-lg bg-green-500/20 text-green-400 border border-green-500/40";
+                feed.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> Correct Answer!`;
+            } else {
+                feed.className = "mt-3 text-xs font-bold p-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/40";
+                feed.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> Incorrect! Right option is: ${String.fromCharCode(65 + mcq.ans)}. ${mcq.opts[mcq.ans]}`;
+            }
+        }
+
+        function filterMCQs() { renderPracticeMCQs(); }
+
+        // ONLINE EXAM SYSTEM ENGINE
+        function startExam(e) {
+            e.preventDefault();
+            studentProfile.name = document.getElementById('examStudentName').value;
+            studentProfile.roll = document.getElementById('examRollNo').value;
+            studentProfile.course = document.getElementById('examCourse').value;
+
+            document.getElementById('userBadgeName').textContent = studentProfile.name;
+
+            const len = parseInt(document.getElementById('examLength').value);
+            // Shuffle & Select Questions
+            examQuestions = [...RAW_MCQS].sort(() => 0.5 - Math.random()).slice(0, len);
+            
+            currentExamIndex = 0;
+            userAnswers = {};
+            flaggedQuestions = {};
+
+            document.getElementById('examStartCard').classList.add('hidden');
+            document.getElementById('liveExamArea').classList.remove('hidden');
+            document.getElementById('certificateResultArea').classList.add('hidden');
+
+            document.getElementById('examStudentLabel').textContent = studentProfile.name;
+
+            // Timer: 25 Qs = 25 Mins, 50 Qs = 45 Mins
+            examTimeRemaining = len === 25 ? 25 * 60 : 45 * 60;
+            startTimer();
+
+            renderExamQuestion();
+            renderPalette();
+        }
+
+        function startTimer() {
+            if (examTimerInterval) clearInterval(examTimerInterval);
+            examTimerInterval = setInterval(() => {
+                examTimeRemaining--;
+                const mins = Math.floor(examTimeRemaining / 60);
+                const secs = examTimeRemaining % 60;
+                document.getElementById('examTimer').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                if (examTimeRemaining <= 0) {
+                    clearInterval(examTimerInterval);
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function renderExamQuestion() {
+            const q = examQuestions[currentExamIndex];
+            document.getElementById('qNumberBadge').textContent = `Question #${currentExamIndex + 1} of ${examQuestions.length}`;
+            document.getElementById('qText').textContent = q.q;
+            document.getElementById('examProgressLabel').textContent = `Question ${currentExamIndex + 1} of ${examQuestions.length}`;
+
+            const opts = document.getElementById('qOptions');
+            opts.innerHTML = q.opts.map((opt, oIdx) => {
+                const isSelected = userAnswers[currentExamIndex] === oIdx;
+                return `
+                    <button onclick="selectExamOption(${oIdx})" class="w-full text-left p-3.5 rounded-xl text-xs font-semibold transition-all border ${isSelected ? 'bg-pyYellow/20 border-pyYellow text-pyYellow' : 'bg-darkBg border-darkBorder text-gray-200 hover:border-gray-500'}">
+                        ${String.fromCharCode(65 + oIdx)}. ${opt}
+                    </button>
+                `;
+            }).join('');
+
+            document.getElementById('flagBtn').className = flaggedQuestions[currentExamIndex] ? "text-xs text-amber-500 font-bold" : "text-xs text-gray-400 hover:text-pyYellow";
+        }
+
+        function selectExamOption(oIdx) {
+            userAnswers[currentExamIndex] = oIdx;
+            renderExamQuestion();
+            renderPalette();
+        }
+
+        function toggleFlagQuestion() {
+            flaggedQuestions[currentExamIndex] = !flaggedQuestions[currentExamIndex];
+            renderExamQuestion();
+            renderPalette();
+        }
+
+        function navigateExamQuestion(dir) {
+            let next = currentExamIndex + dir;
+            if (next >= 0 && next < examQuestions.length) {
+                currentExamIndex = next;
+                renderExamQuestion();
+                renderPalette();
+            }
+        }
+
+        function renderPalette() {
+            const pal = document.getElementById('qPalette');
+            pal.innerHTML = examQuestions.map((_, idx) => {
+                let statusClass = "bg-darkBg border-darkBorder text-gray-400";
+                if (idx === currentExamIndex) statusClass = "bg-pyYellow text-darkBg font-bold glow-yellow";
+                else if (flaggedQuestions[idx]) statusClass = "bg-amber-500 text-white font-bold";
+                else if (userAnswers[idx] !== undefined) statusClass = "bg-emerald-500 text-white font-bold";
+
+                return `
+                    <button onclick="currentExamIndex = ${idx}; renderExamQuestion(); renderPalette();" class="w-8 h-8 rounded-lg text-xs transition-all border ${statusClass}">
+                        ${idx + 1}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function submitExamEarly() {
+            if (confirm("Are you sure you want to submit your exam now?")) {
+                clearInterval(examTimerInterval);
+                finishExam();
+            }
+        }
+
+        function finishExam() {
+            document.getElementById('liveExamArea').classList.add('hidden');
+            document.getElementById('certificateResultArea').classList.remove('hidden');
+
+            let correct = 0;
+            let incorrect = 0;
+
+            examQuestions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.ans) correct++;
+                else if (userAnswers[idx] !== undefined) incorrect++;
+            });
+
+            const total = examQuestions.length;
+            const pct = Math.round((correct / total) * 100);
+
+            // Populate Certificate
+            document.getElementById('certStudentName').textContent = studentProfile.name.toUpperCase();
+            document.getElementById('certRollNo').textContent = studentProfile.roll;
+            document.getElementById('certCourse').textContent = studentProfile.course;
+            document.getElementById('certTotalQ').textContent = total;
+            document.getElementById('certCorrect').textContent = correct;
+            document.getElementById('certIncorrect').textContent = incorrect;
+            document.getElementById('certScorePct').textContent = `${pct}%`;
+
+            let grade = "GRADE F (FAILED)";
+            if (pct >= 85) grade = "GRADE A+ (OUTSTANDING)";
+            else if (pct >= 70) grade = "GRADE A (EXCELLENT)";
+            else if (pct >= 50) grade = "GRADE B (GOOD)";
+
+            document.getElementById('certGrade').textContent = grade;
+            document.getElementById('certIssueDate').textContent = `Date: ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+
+            // Confetti effect if passed
+            if (pct >= 50 && typeof confetti === 'function') {
+                confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+            }
+        }
+
+        // PLAYGROUND ENGINE
+        function setupPlayground() {
+            loadSampleCode();
+        }
+
+        function loadSampleCode() {
+            const val = document.getElementById('sampleSelect').value;
+            const samples = {
+                hello: `# Student Record Demo (VBSPU Jaunpur)\nstudent = {\n    "name": "Raj Gautam",\n    "institute": "Raj CS",\n    "course": "BCA"\n}\n\nprint("Student:", student["name"])\nprint("Portal:", student["institute"])`,
+                oops: `class Person:\n    def __init__(self, name):\n        self.name = name\n\nclass Student(Person):\n    def study(self):\n        return f"{self.name} is learning Python on fun by .py!"\n\ns = Student("Raj Gautam")\nprint(s.study())`,
+                script: `import re\n\ntext = "Contact Raj CS at raj@vbspu.ac.in"\nmatch = re.findall(r'\\S+@\\S+', text)\nprint("Found Email:", match[0])`
+            };
+            document.getElementById('playgroundCode').value = samples[val];
+        }
+
+        function runPlaygroundCode() {
+            const code = document.getElementById('playgroundCode').value;
+            const consoleEl = document.getElementById('playgroundConsole');
+            consoleEl.textContent = "Executing Python script in sandbox...\n------------------------------------\n";
+
+            setTimeout(() => {
+                try {
+                    // Simple simulated output parser
+                    if (code.includes('print(')) {
+                        const matches = code.match(/print\((.*?)\)/g);
+                        matches.forEach(m => {
+                            let content = m.replace('print(', '').slice(0, -1);
+                            consoleEl.textContent += content.replace(/['"]/g, '') + "\n";
+                        });
+                    } else {
+                        consoleEl.textContent += "Code executed successfully with no output.\n";
+                    }
+                } catch (err) {
+                    consoleEl.textContent += "SyntaxError / Execution Error\n";
+                }
+            }, 300);
+        }
+
+        // ACCOUNT MODAL
+        function openStudentModal() { document.getElementById('studentModal').classList.remove('hidden'); }
+        function closeStudentModal() { document.getElementById('studentModal').classList.add('hidden'); }
+        function saveStudentProfile() {
+            studentProfile.name = document.getElementById('modalName').value;
+            studentProfile.roll = document.getElementById('modalRoll').value;
+            document.getElementById('userBadgeName').textContent = studentProfile.name;
+            closeStudentModal();
+        }
+
+        function copyNoteCode() {
+            const code = document.getElementById('noteCode').textContent;
+            navigator.clipboard.writeText(code);
+            alert("Code copied to clipboard!");
+        }
+    </script>
+</body>
+</html>
